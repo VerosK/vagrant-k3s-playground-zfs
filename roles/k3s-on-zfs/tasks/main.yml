@@ -1,0 +1,23 @@
+
+- name: ensure k3s data dir
+  file:
+    path: /var/lib/rancher/k3s
+    state: directory
+    owner: root
+    group: root
+    mode: 0700
+
+- name: Create k3s-root
+  zfs:
+    name: '{{ zfs_pool_name }}/k3s'
+    state: present
+    extra_zfs_properties:
+      mountpoint: /var/lib/rancher/k3s
+
+
+- name: Create k3s-data
+  zfs:
+    name: '{{ zfs_pool_name }}/kube-storage'
+    state: present
+    extra_zfs_properties:
+      mountpoint: '{{ kube_local_storage_dir }}'

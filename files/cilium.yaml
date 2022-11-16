@@ -1,0 +1,48 @@
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: cilium
+  namespace: kube-system
+spec:
+  bootstrap: true
+  repo: https://helm.cilium.io/
+  chart: cilium
+  version: 1.12.3
+  targetNamespace: kube-system
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChartConfig
+metadata:
+  name: cilium
+  namespace: kube-system
+spec:
+  valuesContent: |
+    ipam:
+      mode: kubernetes
+
+    k8s:
+      requireIPv4PodCIDR: true
+
+    cni:
+      install: true
+    
+    operator:
+      install: true
+      replicas: 1
+    
+    hubble: 
+      enabled: true    
+      listenAddress: ":4244"
+      relay:
+        enabled: true
+        replicas: 1
+
+      ui:
+        enabled: true
+        ingress:
+          enabled: false
+      
+    #kubeProxyReplacement: strict
+
+

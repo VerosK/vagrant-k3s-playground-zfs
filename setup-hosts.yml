@@ -1,0 +1,28 @@
+- name: Setup
+  hosts: all
+  tasks:
+    - name: Check connectivity
+      ping:
+
+  roles:
+    - role: local.binenv
+
+- name: Setup pool
+  hosts: all
+
+  roles:
+    - role: containerd-on-zfs
+    - role: k3s-on-zfs
+    - role: local.binenv
+    - role: wftech.k3s
+
+  tasks:
+    - name: Start cilium
+      copy:
+        src: cilium.yaml
+        dest: /var/lib/rancher/k3s/server/manifests/cilium.yaml
+      tags: apps
+
+# start k3s
+# k3s server --snapshotter zfs  --container-runtime-endpoint /run/containerd/containerd.sock --flannel-backend=none
+

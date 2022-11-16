@@ -1,0 +1,58 @@
+
+- name: Add zfs userspace commands
+  apt:
+    name: zfsutils-linux
+    state: present
+
+- name: Ensure data pool
+  shell:
+    zfs list {{ zfs_pool_name }}
+  register: _have_zfs_pool
+  changed_when: false
+  ignore_errors: yes
+
+- name: Create first pool
+  shell:
+    zpool create {{ zfs_pool_name }} {{ zfs_pool_disks }} -m  none
+  when: _have_zfs_pool is failed
+
+- name: Create containerd mountpoint
+  zfs:
+    name: '{{ zfs_pool_name }}/containerd'
+    state: present
+    extra_zfs_properties:
+      mountpoint: /var/lib/containerd/io.containerd.snapshotter.v1.zfs
+
+- name: Add containerd
+  apt:
+    name: containerd
+    state: present
+  register: _container
+
+- name: Stop containerd
+  systemd:
+    name: containerd
+    state: stopped
+  when: _container is changed
+
+- name: Create containerd config dir
+  file:
+    path: /etc/containerd
+    state: directory
+
+- name: Add containerd ZFS config
+  copy:
+    src: zfs.toml
+    dest: /etc/containerd/zfs.toml
+
+- name: Add containerd config
+  copy:
+    content:
+      imports =  [ "zfs.toml" ]
+    dest: /etc/containerd/config.toml
+
+- name: Start containerd
+  systemd:
+    name: containerd
+    state: started
+    enabled: yes

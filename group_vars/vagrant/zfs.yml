@@ -1,0 +1,3 @@
+
+zfs_pool_name: zfs
+zfs_pool_disks: /dev/sdb

@@ -1,0 +1,41 @@
+
+k3s_node_name: '{{ ansible_nodename }}'
+
+kube_local_storage_dir: /data/kube-pvc/
+
+kube_taint_apiserver_nodes: false
+
+k3s_disable_flannel: true
+
+kube_cluster_cidr: 172.16.0.0/16
+kube_service_cidr: 172.31.0.0/16
+kube_cluster_dns: 172.31.53.53
+kube_cluster_domain: cluster.local
+
+k3s_apiserver_server: https://192.168.49.41:6443/
+
+kube_node_external_ip: '192.168.49.41'
+kube_node_ip: '192.168.49.41'
+
+
+k3s_extra_config:
+  snapshotter: "zfs"
+  container-runtime-endpoint: unix:///run/containerd/containerd.sock
+
+
+k3s_distribution_url:
+  https://github.com/k3s-io/k3s/releases/download/v1.25.3%2Bk3s1/k3s
+k3s_checksum:
+  sha256:971a89432a107bae4e8762271ce74ccb02ccea5a21f2c6bdab779ffca976ad4a
+
+k3s_is_apiserver: true
+
+
+k3s_link_kubectl: true
+k3s_link_crictl: true
+k3s_link_ctr: false
+
+#k3s_agent_token:
+#    gaeVehaiphohdu9Li2iphaitaet7aeha
+k3s_agent_token_file: ~
+k3s_cluster_token_file: ~

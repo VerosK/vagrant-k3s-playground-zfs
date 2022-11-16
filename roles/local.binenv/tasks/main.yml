@@ -1,0 +1,16 @@
+- name: Get binenv
+  get_url:
+    url: https://github.com/devops-works/binenv/releases/latest/download/binenv_linux_amd64
+    dest: /usr/local/bin/binenv
+    mode: 0755
+
+- name: Create binenv profile
+  copy:
+    dest: /etc/profile.d/binenv.sh
+    content: |
+      mkdir -p ${HOME}/.binenv
+      export PATH=${HOME}/.binenv:${PATH}
+      if [ ! -f ${HOME}/.binenv/binenv ]; then
+        /usr/local/bin/binenv update
+        /usr/local/bin/binenv install binenv
+      fi
