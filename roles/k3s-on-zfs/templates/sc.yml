@@ -1,0 +1,29 @@
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: zfs
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+parameters:
+  recordsize: "4k"
+  compression: "off"
+  dedup: "off"
+  fstype: "zfs"
+  poolname: "{{ zfs_k3s_volumes_dataset }}"
+provisioner: zfs.csi.openebs.io
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: zfs-test
+spec:
+  storageClassName: zfs
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+

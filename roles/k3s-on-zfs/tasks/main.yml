@@ -14,10 +14,25 @@
     extra_zfs_properties:
       mountpoint: /var/lib/rancher/k3s
 
-
 - name: Create k3s-data
   zfs:
-    name: '{{ zfs_pool_name }}/kube-storage'
+    name: '{{ zfs_k3s_volumes_dataset }}'
     state: present
     extra_zfs_properties:
-      mountpoint: '{{ kube_local_storage_dir }}'
+      mountpoint: 'none' #{{ kube_local_storage_dir }}'
+
+- name: Ensure manifests dir when required
+  file:
+    path: /var/lib/rancher/k3s/server/manifests/
+    state: directory
+    mode: 0700
+
+- name: Create ZFS operator
+  template:
+    src: zfs-operator.yml
+    dest: /var/lib/rancher/k3s/server/manifests/zfs-operator.yml
+
+- name: Create storage class
+  template:
+    src: sc.yml
+    dest: /var/lib/rancher/k3s/server/manifests/zfs-storage-class.yml

@@ -14,9 +14,18 @@
     - role: containerd-on-zfs
     - role: k3s-on-zfs
     - role: local.binenv
+      tags: binenv
     - role: wftech.k3s
+      tags: k3s
+
 
   tasks:
+    - name: Create app dir
+      file:
+        path: /var/lib/rancher/k3s/server/manifests/
+        state: directory
+        mode: 0700
+
     - name: Start cilium
       copy:
         src: cilium.yaml

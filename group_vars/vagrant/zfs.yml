@@ -1,3 +1,6 @@
 
-zfs_pool_name: zfs
+zfs_pool_name: tank
 zfs_pool_disks: /dev/sdb
+
+zfs_k3s_volumes_dataset: '{{ zfs_pool_name }}/kube-volumes'
+

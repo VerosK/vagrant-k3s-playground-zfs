@@ -21,6 +21,10 @@ kube_node_ip: '192.168.49.41'
 k3s_extra_config:
   snapshotter: "zfs"
   container-runtime-endpoint: unix:///run/containerd/containerd.sock
+  #bind-address: 192.168.49.41
+  bind-address: 0.0.0.0
+
+k3s_disable_local_storage: true
 
 
 k3s_distribution_url:
